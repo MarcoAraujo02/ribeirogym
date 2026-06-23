@@ -118,16 +118,64 @@ header.scrolled{background:rgba(8,8,9,.82);backdrop-filter:blur(12px);border-bot
 /* ---------- Hero ---------- */
 .hero{position:relative;padding-top:74px;min-height:100svh;display:flex;align-items:center;overflow:hidden}
 .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,56px);align-items:center;width:100%;padding-top:clamp(40px,7vh,80px);padding-bottom:clamp(40px,7vh,80px)}
+
+/* ---- choreographed entrance ---- */
+.hero-copy .eyebrow,
+.hero-copy h1 .line,
+.hero-copy .lead,
+.hero-actions,
+.hero-media{
+  opacity:0;
+  transform:translateY(22px);
+  filter:blur(6px);
+}
+.js .hero-copy .eyebrow,
+.js .hero-copy h1 .line,
+.js .hero-copy .lead,
+.js .hero-actions,
+.js .hero-media{
+  animation:heroIn .85s cubic-bezier(.16,.8,.3,1) forwards;
+}
+.js .hero-copy .eyebrow{animation-delay:.05s}
+.js .hero-copy h1 .line:nth-child(1){animation-delay:.16s}
+.js .hero-copy h1 .line:nth-child(2){animation-delay:.26s}
+.js .hero-copy h1 .line:nth-child(3){animation-delay:.36s}
+.js .hero-copy .lead{animation-delay:.5s}
+.js .hero-actions{animation-delay:.62s}
+.js .hero-media{animation-delay:.4s}
+@keyframes heroIn{to{opacity:1;transform:translateY(0);filter:blur(0)}}
+@media (prefers-reduced-motion:reduce){
+  .hero-copy .eyebrow,.hero-copy h1 .line,.hero-copy .lead,.hero-actions,.hero-media{
+    opacity:1;transform:none;filter:none;animation:none;
+  }
+}
+
 .hero-copy h1{font-size:clamp(2.6rem,7.2vw,5.4rem)}
+.hero-copy h1 .line{display:block}
 .hero-copy .lead{margin:1.4rem 0 2.2rem}
 .hero-actions{display:flex;flex-wrap:wrap;gap:1rem}
-.hero-media{position:relative}
+
+/* ---- magnetic CTA ---- */
+.btn{will-change:transform}
+.btn .btn-label{display:inline-block;transition:transform .25s cubic-bezier(.2,.7,.2,1)}
+.btn:hover .btn-label{transform:translateX(1px)}
+
+.hero-media{position:relative;perspective:1000px}
 .hero-media .frame{
   position:relative;border-radius:14px;overflow:hidden;
   border:1px solid var(--line);
   box-shadow:0 40px 90px -40px rgba(0,0,0,.9);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease;
+  transform-style:preserve-3d;
+  will-change:transform;
 }
-.hero-media img{width:100%;height:100%;object-fit:cover;aspect-ratio:1/1}
+.hero-media img{width:100%;height:100%;object-fit:cover;aspect-ratio:1/1;
+  transition:transform .6s cubic-bezier(.2,.7,.2,1);
+  transform:scale(1.06);
+  will-change:transform;
+}
+.hero-media:hover .frame{box-shadow:0 50px 110px -40px rgba(0,0,0,.95)}
+.hero-media:hover img{transform:scale(1.1)}
 .hero-media .frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,10,11,.55) 100%)}
 .hero-badge{
   position:absolute;left:-14px;bottom:26px;z-index:3;
@@ -135,12 +183,21 @@ header.scrolled{background:rgba(8,8,9,.82);backdrop-filter:blur(12px);border-bot
   padding:.75em 1.1em;font-family:var(--display);font-weight:900;
   text-transform:uppercase;line-height:1;letter-spacing:-.01em;
   box-shadow:0 18px 40px -16px rgba(225,21,34,.8);
+  animation:badgeFloat 4.2s ease-in-out infinite;
 }
 .hero-badge small{display:block;font-weight:600;font-size:.62rem;letter-spacing:.18em;opacity:.9;margin-bottom:.35em}
 .hero-badge span{font-size:1.25rem}
+@keyframes badgeFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@media (prefers-reduced-motion:reduce){
+  .hero-badge{animation:none}
+  .hero-media img{transform:none}
+}
 .glow{position:absolute;width:60vw;height:60vw;max-width:680px;max-height:680px;border-radius:50%;
   background:radial-gradient(circle,rgba(225,21,34,.30),transparent 62%);
+  animation:glowBreathe 7s ease-in-out infinite;
   top:-18%;right:-12%;filter:blur(10px);z-index:0;pointer-events:none}
+@keyframes glowBreathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.75;transform:scale(1.08)}}
+@media (prefers-reduced-motion:reduce){.glow{animation:none}}
 
 /* ---------- Marquee / trust ---------- */
 .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel)}
@@ -307,21 +364,25 @@ footer{border-top:1px solid var(--line);background:var(--ink)}
 <section class="hero">
   <div class="glow"></div>
   <div class="wrap hero-grid">
-    <div class="hero-copy reveal">
+    <div class="hero-copy">
       <span class="eyebrow">Personal Trainer · Nutrição · Osteopatia</span>
-      <h1>Transforma o teu corpo,<br><span class="outline">muda</span> a tua vida.</h1>
+      <h1>
+        <span class="line">Transforma</span>
+        <span class="line">o teu corpo,</span>
+        <span class="line"><span class="outline">muda</span> a tua vida.</span>
+      </h1>
       <p class="lead">Treino, nutrição e osteopatia num só lugar. Ginásio próprio, app de treino e acompanhamento online — para evoluíres onde quer que estejas.</p>
       <div class="hero-actions">
         <a class="btn js-wa" href="#contacto">
           <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.488-.957zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.612-.916-2.207-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-          Falar no WhatsApp
+          <span class="btn-label">Falar no WhatsApp</span>
         </a>
-        <a class="btn ghost" href="#resultados">Ver resultados</a>
+        <a class="btn ghost magnetic" href="#resultados"><span class="btn-label">Ver resultados</span></a>
       </div>
     </div>
 
-    <div class="hero-media reveal">
-      <div class="frame">
+    <div class="hero-media" id="heroMedia">
+      <div class="frame" id="heroFrame">
         <img src="./capa.jpg" alt="Ribeiro — personal trainer" />
       </div>
       <div class="hero-badge">
@@ -589,6 +650,40 @@ const io = new IntersectionObserver((entries)=>{
   entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in"); io.unobserve(e.target);} });
 },{threshold:.14, rootMargin:"0px 0px -8% 0px"});
 document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+
+/* Hero image tilt — follows pointer, settles back on leave */
+const heroMedia = document.getElementById("heroMedia");
+const heroFrame = document.getElementById("heroFrame");
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (heroMedia && heroFrame && !reduceMotion && window.matchMedia("(hover:hover)").matches){
+  let raf = null;
+  heroMedia.addEventListener("mousemove", (e)=>{
+    const r = heroMedia.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    if (raf) cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(()=>{
+      heroFrame.style.transform = `rotateY(${px*7}deg) rotateX(${-py*7}deg) translateZ(0)`;
+    });
+  });
+  heroMedia.addEventListener("mouseleave", ()=>{
+    if (raf) cancelAnimationFrame(raf);
+    heroFrame.style.transform = "rotateY(0deg) rotateX(0deg)";
+  });
+}
+
+/* Magnetic buttons — subtle pull toward cursor */
+if (!reduceMotion && window.matchMedia("(hover:hover)").matches){
+  document.querySelectorAll(".btn").forEach(btn=>{
+    btn.addEventListener("mousemove", (e)=>{
+      const r = btn.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      btn.style.transform = `translate(${x*8}px, ${y*8}px)`;
+    });
+    btn.addEventListener("mouseleave", ()=>{ btn.style.transform = "translate(0,0)"; });
+  });
+}
 
 /* Year */
 document.getElementById("year").textContent = new Date().getFullYear();
