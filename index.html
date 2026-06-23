@@ -116,8 +116,8 @@ header.scrolled{background:rgba(8,8,9,.82);backdrop-filter:blur(12px);border-bot
 .burger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
 
 /* ---------- Hero ---------- */
-.hero{position:relative;padding-top:74px;min-height:100svh;display:flex;align-items:center;overflow:hidden}
-.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,56px);align-items:center;width:100%;padding-top:clamp(40px,7vh,80px);padding-bottom:clamp(40px,7vh,80px)}
+.hero{position:relative;padding-top:74px;min-height:100svh;display:flex;align-items:center;overflow:hidden;background:#070708}
+.hero-grid{position:relative;z-index:3;display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(24px,4vw,56px);align-items:center;width:100%;padding-top:clamp(40px,7vh,80px);padding-bottom:clamp(40px,7vh,80px)}
 
 /* ---- choreographed entrance ---- */
 .hero-copy .eyebrow,
@@ -192,12 +192,65 @@ header.scrolled{background:rgba(8,8,9,.82);backdrop-filter:blur(12px);border-bot
   .hero-badge{animation:none}
   .hero-media img{transform:none}
 }
-.glow{position:absolute;width:60vw;height:60vw;max-width:680px;max-height:680px;border-radius:50%;
-  background:radial-gradient(circle,rgba(225,21,34,.30),transparent 62%);
-  animation:glowBreathe 7s ease-in-out infinite;
-  top:-18%;right:-12%;filter:blur(10px);z-index:0;pointer-events:none}
-@keyframes glowBreathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.75;transform:scale(1.08)}}
-@media (prefers-reduced-motion:reduce){.glow{animation:none}}
+
+/* ---------- Beams background (hero) ---------- */
+.beams{
+  position:absolute; inset:0; z-index:0; overflow:hidden;
+  pointer-events:none;
+  background:#080809;
+}
+.beams::before{
+  /* base wash to keep edges darker, center readable */
+  content:"";
+  position:absolute; inset:0;
+  background:radial-gradient(120% 90% at 60% 30%, rgba(8,8,9,.05) 0%, rgba(8,8,9,.5) 55%, rgba(8,8,9,.88) 100%);
+  z-index:2;
+}
+.beams .beam{
+  position:absolute;
+  top:-40%; left:50%;
+  width:160vw; height:200%;
+  transform-origin:center;
+  mix-blend-mode:screen;
+  filter:blur(1px);
+  will-change:transform;
+}
+.beams .beam i{
+  position:absolute; top:0; bottom:0;
+  background:linear-gradient(90deg, transparent 0%, var(--bc) 50%, transparent 100%);
+  width:var(--bw, 9%);
+  left:50%;
+  margin-left:calc(var(--bw,9%) / -2);
+}
+.beam--1{transform:translateX(-72%) rotate(16deg); animation:beam1 23s ease-in-out infinite;}
+.beam--1 i{--bc:rgba(225,21,34,.75); --bw:9%;}
+.beam--2{transform:translateX(-46%) rotate(13deg); animation:beam2 27s ease-in-out infinite;}
+.beam--2 i{--bc:rgba(120,170,160,.30); --bw:13%;}
+.beam--3{transform:translateX(-20%) rotate(20deg); animation:beam3 19s ease-in-out infinite;}
+.beam--3 i{--bc:rgba(150,30,40,.7); --bw:7%;}
+.beam--4{transform:translateX(4%) rotate(11deg); animation:beam4 31s ease-in-out infinite;}
+.beam--4 i{--bc:rgba(255,255,255,.16); --bw:16%;}
+.beam--5{transform:translateX(28%) rotate(19deg); animation:beam5 25s ease-in-out infinite;}
+.beam--5 i{--bc:rgba(225,21,34,.55); --bw:10%;}
+.beam--6{transform:translateX(54%) rotate(15deg); animation:beam6 21s ease-in-out infinite;}
+.beam--6 i{--bc:rgba(90,40,60,.45); --bw:12%;}
+.beam--7{transform:translateX(78%) rotate(22deg); animation:beam7 28s ease-in-out infinite;}
+.beam--7 i{--bc:rgba(255,255,255,.08); --bw:8%;}
+
+@keyframes beam1{0%,100%{transform:translateX(-72%) rotate(16deg) translateY(0)}50%{transform:translateX(-69%) rotate(13deg) translateY(2.5%)}}
+@keyframes beam2{0%,100%{transform:translateX(-46%) rotate(13deg) translateY(0)}50%{transform:translateX(-50%) rotate(16deg) translateY(-2.5%)}}
+@keyframes beam3{0%,100%{transform:translateX(-20%) rotate(20deg) translateY(0)}50%{transform:translateX(-16%) rotate(17deg) translateY(3%)}}
+@keyframes beam4{0%,100%{transform:translateX(4%) rotate(11deg) translateY(0)}50%{transform:translateX(8%) rotate(14deg) translateY(-2%)}}
+@keyframes beam5{0%,100%{transform:translateX(28%) rotate(19deg) translateY(0)}50%{transform:translateX(24%) rotate(16deg) translateY(2.5%)}}
+@keyframes beam6{0%,100%{transform:translateX(54%) rotate(15deg) translateY(0)}50%{transform:translateX(58%) rotate(18deg) translateY(-3%)}}
+@keyframes beam7{0%,100%{transform:translateX(78%) rotate(22deg) translateY(0)}50%{transform:translateX(74%) rotate(19deg) translateY(2%)}}
+@media (prefers-reduced-motion:reduce){
+  .beams .beam{animation:none}
+}
+@media (max-width:720px){
+  .beams .beam{filter:blur(2px)}
+  .beam--2,.beam--4,.beam--6{opacity:.7}
+}
 
 /* ---------- Marquee / trust ---------- */
 .strip{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--panel)}
@@ -362,7 +415,15 @@ footer{border-top:1px solid var(--line);background:var(--ink)}
 
 <!-- ============ HERO ============ -->
 <section class="hero">
-  <div class="glow"></div>
+  <div class="beams" aria-hidden="true">
+    <div class="beam beam--1"><i></i></div>
+    <div class="beam beam--2"><i></i></div>
+    <div class="beam beam--3"><i></i></div>
+    <div class="beam beam--4"><i></i></div>
+    <div class="beam beam--5"><i></i></div>
+    <div class="beam beam--6"><i></i></div>
+    <div class="beam beam--7"><i></i></div>
+  </div>
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <span class="eyebrow">Personal Trainer · Nutrição · Osteopatia</span>
